@@ -1,3 +1,6 @@
 [0.0.1 | 2024-05-11]
 [added] basic player movement
 [added] basic collision detection
+
+[0.0.2 | 2024-05-11]
+[added] basic fast trig functions

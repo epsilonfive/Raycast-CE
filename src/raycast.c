@@ -21,7 +21,6 @@ void renderWorld(struct state *state) {
     gfx_SetColor(randInt(0, 255));
     gfx_HorizLine(160 - (width >> 1), i, width);
   }
-  dbg_sprintf(dbgout, "Took %d ticks\n", timer_GetSafe(1, TIMER_UP));
     return;
 
 

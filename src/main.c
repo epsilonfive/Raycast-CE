@@ -1,5 +1,6 @@
 #include <graphx.h>
 #include <tice.h>
+#include <debug.h>
 
 #include "state.h"
 #include "input.h"
@@ -17,14 +18,21 @@ int main(void) {
         .player = &player,
         .input = &input,
     };
+    //initialize graphics
+    gfx_Begin();
+    gfx_SetDrawBuffer();
+    gfx_ZeroScreen();
+    gfx_SetTextBGColor(0);
+    gfx_SetTextFGColor(255);
+    gfx_SetTextTransparentColor(0);
+    gfx_PrintStringXY("Initializing...", 5, 5);
+    gfx_BlitBuffer();
     //initialize things
     initializeMap(&map);
     initializeInput(&input);
     initializeFastTrig();
-    //initialize graphics
-    gfx_Begin();
-    gfx_SetDrawBuffer();
-    gfx_BlitScreen();
+    for (int i = 0; i < ANGLE_RESOLUTION; i += 32)
+        dbg_sprintf(dbgout, "Cosine of %d is %d\n", i, FAST_COS(i));
     //initialize the timer
     timer_Enable(1, TIMER_CPU, TIMER_0INT, TIMER_UP);
     //main loop

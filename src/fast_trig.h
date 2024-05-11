@@ -4,7 +4,7 @@
 #include "map.h"
 
 #define LUT_LOCATION ((uint32_t *) 0x0D031F6)
-#define TAU (3.141592653 * 2) //2pi
+#define TAU ((double) 3.141592653 * 2) //2pi
 #define ANGLE_RESOLUTION 1024 //what represents tau in our new system?
 #define ANGLE_INCREMENT (TAU / ANGLE_RESOLUTION)
 
