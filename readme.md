@@ -1,5 +1,5 @@
-### Cube Buffer Demo
+### Raycasting Engine CE
 
-Draws a rotating cube, where drawing is performed on the hidden back buffer.
+A basic raycasting engine for the CE. More updates to come.
 
-![Screenshot](screenshot.png)
+(c) 2024 Bauer
