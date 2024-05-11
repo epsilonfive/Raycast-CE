@@ -7,6 +7,13 @@
 
 #include "state.h"
 
+//Copyright (c) 2019 Liam Wynn
+//Adapted from Liam Wynn's work and raycasting guide.
+
+//Guide:  https://wynnliam.github.io/raycaster/news/tutorial/2019/03/23/raycaster-part-01.html
+//GitHub: https://github.com/wynnliam/wynnliam.github.io
+
+
 void renderWorld(struct state *state) {
   timer_Set(1, 0);
   for (int i = 0; i < 320; i++) {
