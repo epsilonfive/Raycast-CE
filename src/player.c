@@ -25,10 +25,10 @@ void updatePlayer(struct state *state) {
     //bounds checking
     if (target_x < 0) target_x = 0;
     if (target_y < 0) target_y = 0;
-    if (target_x >= MAP_WIDTH * TILE_WIDTH_PX) target_x = MAP_WIDTH * TILE_WIDTH_PX;
-    if (target_y >= MAP_HEIGHT * TILE_HEIGHT_PX) target_y = MAP_HEIGHT * TILE_HEIGHT_PX;
+    if (target_x >= MAP_WIDTH * MINIMAP_TILE_WIDTH_PX) target_x = MAP_WIDTH * MINIMAP_TILE_WIDTH_PX;
+    if (target_y >= MAP_HEIGHT * MINIMAP_TILE_HEIGHT_PX) target_y = MAP_HEIGHT * MINIMAP_TILE_HEIGHT_PX;
     //move the player if valid
-    if (!state->map->data[target_y / TILE_HEIGHT_PX][target_x / TILE_WIDTH_PX]) {
+    if (!state->map->data[target_y / MINIMAP_TILE_HEIGHT_PX][target_x / MINIMAP_TILE_WIDTH_PX]) {
         player->x = target_x;
         player->y = target_y;
     }

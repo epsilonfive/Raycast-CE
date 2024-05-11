@@ -6,6 +6,7 @@
 #include "player.h"
 #include "map.h"
 #include "raycast.h"
+#include "fast_trig.h"
 
 int main(void) {
     static struct map map;
@@ -19,6 +20,7 @@ int main(void) {
     //initialize things
     initializeMap(&map);
     initializeInput(&input);
+    initializeFastTrig();
     //initialize graphics
     gfx_Begin();
     gfx_SetDrawBuffer();

@@ -25,11 +25,11 @@ void renderMap(struct map *map) {
         for (int j = 0; j < MAP_WIDTH; j++) {
             if (map->data[j][i]) gfx_SetColor(0);
             else gfx_SetColor(255);
-            gfx_FillRectangle(MINIMAP_X + i * TILE_WIDTH_PX,
-                MINIMAP_X + j * TILE_HEIGHT_PX, TILE_WIDTH_PX, TILE_HEIGHT_PX); 
+            gfx_FillRectangle(MINIMAP_X + i * MINIMAP_TILE_WIDTH_PX,
+                MINIMAP_X + j * MINIMAP_TILE_HEIGHT_PX, MINIMAP_TILE_WIDTH_PX, MINIMAP_TILE_HEIGHT_PX); 
         }
     }
     //draw the outline of the map as well
     gfx_SetColor(0);
-    gfx_Rectangle(MINIMAP_X - 1, MINIMAP_Y - 1, MAP_WIDTH * TILE_WIDTH_PX + 2, MAP_HEIGHT * TILE_HEIGHT_PX + 2);
+    gfx_Rectangle(MINIMAP_X - 1, MINIMAP_Y - 1, MAP_WIDTH * MINIMAP_TILE_WIDTH_PX + 2, MAP_HEIGHT * MINIMAP_TILE_HEIGHT_PX + 2);
 }

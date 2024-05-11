@@ -19,7 +19,7 @@ void renderWorld(struct state *state) {
 
 
 
-    double posX = state->player->x / TILE_WIDTH_PX, posY = state->player->y / TILE_HEIGHT_PX;  //x and y start position
+    double posX = state->player->x / MINIMAP_TILE_WIDTH_PX, posY = state->player->y / MINIMAP_TILE_HEIGHT_PX;  //x and y start position
   double dirX = cos(state->player->angle), dirY = sin(state->player->angle); //initial direction vector
   double planeX = 0, planeY = 0.75; //the 2d raycaster version of camera plane
 
@@ -35,8 +35,8 @@ void renderWorld(struct state *state) {
       double rayDirX = dirX + planeX * cameraX;
       double rayDirY = dirY + planeY * cameraX;
       //which box of the map we're in
-      int mapX = (int) state->player->x / TILE_WIDTH_PX;
-      int mapY = (int) state->player->y / TILE_HEIGHT_PX;
+      int mapX = (int) state->player->x / MINIMAP_TILE_WIDTH_PX;
+      int mapY = (int) state->player->y / MINIMAP_TILE_HEIGHT_PX;
 
       //length of ray from current position to next x or y-side
       double sideDistX;
