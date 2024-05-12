@@ -31,8 +31,6 @@ int main(void) {
     initializeMap(&map);
     initializeInput(&input);
     initializeFastTrig();
-    for (int i = 0; i < ANGLE_RESOLUTION; i += 32)
-        dbg_sprintf(dbgout, "Cosine of %d is %d\n", i, FAST_COS(i));
     //initialize the timer
     timer_Enable(1, TIMER_CPU, TIMER_0INT, TIMER_UP);
     //main loop
