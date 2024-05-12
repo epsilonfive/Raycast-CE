@@ -1,11 +1,13 @@
 #include <graphx.h>
 #include <tice.h>
+#include <debug.h>
 
 #include "state.h"
 #include "input.h"
 #include "player.h"
 #include "map.h"
 #include "raycast.h"
+#include "fast_trig.h"
 
 int main(void) {
     static struct map map;
@@ -16,13 +18,19 @@ int main(void) {
         .player = &player,
         .input = &input,
     };
-    //initialize things
-    initializeMap(&map);
-    initializeInput(&input);
     //initialize graphics
     gfx_Begin();
     gfx_SetDrawBuffer();
-    gfx_BlitScreen();
+    gfx_ZeroScreen();
+    gfx_SetTextBGColor(0);
+    gfx_SetTextFGColor(255);
+    gfx_SetTextTransparentColor(0);
+    gfx_PrintStringXY("Initializing...", 5, 5);
+    gfx_BlitBuffer();
+    //initialize things
+    initializeMap(&map);
+    initializeInput(&input);
+    initializeFastTrig();
     //initialize the timer
     timer_Enable(1, TIMER_CPU, TIMER_0INT, TIMER_UP);
     //main loop

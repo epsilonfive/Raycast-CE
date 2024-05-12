@@ -3,13 +3,13 @@
 
 #include "state.h"
 
-#define PLAYER_ROTATION_SPEED 0.1
-#define PLAYER_MOVE_SPEED     3
+#define PLAYER_ROTATION_SPEED 16
+#define PLAYER_MOVE_SPEED     4
 
 struct player {
-    float x;
-    float y;
-    float angle;
+    int x;
+    int y;
+    uint32_t angle;
 };
 
 void updatePlayer(struct state *state);
