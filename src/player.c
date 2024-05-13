@@ -20,6 +20,7 @@ void updatePlayer(struct state *state) {
         rotated = true;
     }
     player->angle %= ANGLE_RESOLUTION;
+    if (player->angle < 0) player->angle += ANGLE_RESOLUTION;
     if (getKeyState(state->input, KEY_UP)) {
         target_x += FAST_COS(player->angle) / PLAYER_MOVE_SPEED;
         target_y += FAST_SIN(player->angle) / PLAYER_MOVE_SPEED;
@@ -37,16 +38,16 @@ void updatePlayer(struct state *state) {
 }
 
 void renderPlayer(struct player *player) {
-    player->x >>= 5;
-    player->y >>= 5;
+    player->x >>= 4;
+    player->y >>= 4;
     player->x += MINIMAP_X;
     player->y += MINIMAP_Y;
     gfx_SetColor(224);
     gfx_FillCircle(player->x, player->y, 3);
-    gfx_Line(player->x, player->y, player->x + (FAST_COS(player->angle) >> 4), 
-        player->y + (FAST_SIN(player->angle) >> 4));
+    gfx_Line(player->x, player->y, player->x + (FAST_COS(player->angle) >> 3), 
+        player->y + (FAST_SIN(player->angle) >> 3));
     player->x -= MINIMAP_X;
     player->y -= MINIMAP_Y;
-    player->x <<= 5;
-    player->y <<= 5;
+    player->x <<= 4;
+    player->y <<= 4;
 }

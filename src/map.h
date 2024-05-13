@@ -12,10 +12,10 @@
 #define TILE_HEIGHT            TILE_WIDTH
 
 //minimap
-#define MINIMAP_TILE_WIDTH_PX  8
+#define MINIMAP_TILE_WIDTH_PX  16
 #define MINIMAP_TILE_HEIGHT_PX MINIMAP_TILE_WIDTH_PX
-#define MINIMAP_X              5
-#define MINIMAP_Y              5
+#define MINIMAP_X              0
+#define MINIMAP_Y              0
 
 struct map {
     uint8_t data[MAP_WIDTH][MAP_HEIGHT];

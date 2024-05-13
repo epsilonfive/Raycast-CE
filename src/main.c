@@ -39,8 +39,8 @@ int main(void) {
         updatePlayer(&state);
         //update the map eventually, if that's needed
         gfx_FillScreen(255);
-        renderWorld(&state);
         renderMap(&map);
+        renderWorld(&state);
         renderPlayer(&player);
         gfx_SwapDraw();
     }

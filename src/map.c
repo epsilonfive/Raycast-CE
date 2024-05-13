@@ -30,6 +30,6 @@ void renderMap(struct map *map) {
         }
     }
     //draw the outline of the map as well
-    gfx_SetColor(0);
-    gfx_Rectangle(MINIMAP_X - 1, MINIMAP_Y - 1, MAP_WIDTH * MINIMAP_TILE_WIDTH_PX + 2, MAP_HEIGHT * MINIMAP_TILE_HEIGHT_PX + 2);
+    //gfx_SetColor(0);
+    //gfx_Rectangle(MINIMAP_X - 1, MINIMAP_Y - 1, MAP_WIDTH * MINIMAP_TILE_WIDTH_PX + 2, MAP_HEIGHT * MINIMAP_TILE_HEIGHT_PX + 2);
 }
