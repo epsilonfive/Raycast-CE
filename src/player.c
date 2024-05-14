@@ -37,16 +37,16 @@ void updatePlayer(struct state *state) {
 }
 
 void renderPlayer(struct player *player) {
-    player->x >>= 4;
-    player->y >>= 4;
+    player->x >>= 7;
+    player->y >>= 7;
     player->x += MINIMAP_X;
     player->y += MINIMAP_Y;
     gfx_SetColor(224);
     gfx_FillCircle(player->x, player->y, 3);
-    gfx_Line(player->x, player->y, player->x + (FAST_COS(player->angle) >> 3), 
-        player->y + (FAST_SIN(player->angle) >> 3));
+    gfx_Line(player->x, player->y, player->x + (FAST_COS(player->angle) >> 6), 
+        player->y + (FAST_SIN(player->angle) >> 6));
     player->x -= MINIMAP_X;
     player->y -= MINIMAP_Y;
-    player->x <<= 4;
-    player->y <<= 4;
+    player->x <<= 7;
+    player->y <<= 7;
 }

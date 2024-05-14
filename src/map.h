@@ -8,7 +8,7 @@
 #define MAP_HEIGHT             MAP_WIDTH
 
 //tile width and height in our special units
-#define TILE_WIDTH             256
+#define TILE_WIDTH             2048
 #define TILE_HEIGHT            TILE_WIDTH
 
 //minimap
