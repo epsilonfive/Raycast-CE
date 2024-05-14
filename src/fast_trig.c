@@ -19,10 +19,10 @@ void initializeFastTrig(void) {
 //originally used in Quake III: Arena, apparently
 //uses Newton's method and some horrible tricks to get a rough approximation of an inverse square root
 int fastInverseSquareRoot(int number) {
+    
     long i;
     float x2, y;
     const float threehalfs = 1.5F;
-
     x2 = number * 0.5F;
     y  = number;
     i  = * ( long * ) &y;                       // evil floating point bit level hacking
@@ -30,7 +30,5 @@ int fastInverseSquareRoot(int number) {
     y  = * ( float * ) &i;
     y  = y * ( threehalfs - ( x2 * y * y ) );   // 1st iteration
     // y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
-
     return y;
-
 }

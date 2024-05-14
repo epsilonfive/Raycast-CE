@@ -41,7 +41,7 @@ int main(void) {
         gfx_FillScreen(255);
         //renderMap(&map);
         renderWorld(&state);
-        renderPlayer(&player);
+        //renderPlayer(&player);
         gfx_SwapDraw();
     }
     //end everything

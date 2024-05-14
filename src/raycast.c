@@ -12,6 +12,13 @@
 #define DY(angle, dx) (FAST_SIN(angle) * dx / FAST_COS(angle))
 #define RDX(angle, offset) (((angle > (ANGLE_RESOLUTION / 4)) && (angle < 3 * (ANGLE_RESOLUTION / 4)) ? -offset : (TILE_WIDTH - offset)))
 #define RDY(angle, offset) (((angle < (ANGLE_RESOLUTION / 2)) ? (TILE_WIDTH - offset) : -offset))
+#define DOT_PRODUCT(x1, y1, x2, y2) (x1 * x2 + y1 * y2)
+#define ANGLE_VECTOR_X(angle) (FAST_COS(state->player->angle) * PLAYER_VECTOR_LENGTH)
+#define ANGLE_VECTOR_Y(angle) (FAST_SIN(state->player->angle) * PLAYER_VECTOR_LENGTH)
+
+
+
+
 
 void renderWorld(struct state *state) {
 	int angle_start = state->player->angle - (FOV >> 1);
@@ -68,16 +75,16 @@ void renderWorld(struct state *state) {
 			//dbg_sprintf(dbgout, "Checking point (%d, %d) for angle...%d\n", temp_x_a, temp_y_a, current_angle);
 			if (!vertical_found && state->map->data[temp_y_a / TILE_HEIGHT][(temp_x_a - (cos < 0)) / TILE_WIDTH]) {
 				//we hit a wall vertically
-				gfx_SetColor(18);
+				//gfx_SetColor(18);
 				//dbg_sprintf(dbgout, "Found wall at (%d, %d) (vertical check)\n", temp_x_a, temp_y_a);
 				//vertical_found = true;
-				gfx_SetPixel(temp_x_a / 128, temp_y_a / 128);
+				//gfx_SetPixel(temp_x_a / 128, temp_y_a / 128);
 				vertical_found = true;
 			}
 			if (!horizontal_found && state->map->data[(temp_y_b - (sin < 0)) / TILE_HEIGHT][temp_x_b / TILE_WIDTH]) {
 				//hit a wall horizontally
-				gfx_SetColor(224);
-				gfx_SetPixel(temp_x_b / 128, temp_y_b / 128);
+				//gfx_SetColor(224);
+				//gfx_SetPixel(temp_x_b / 128, temp_y_b / 128);
 				//dbg_sprintf(dbgout, "Found wall at (%d, %d) (horizontal check)\n", temp_x_b, temp_y_b);
 				horizontal_found = true;
 			}
@@ -92,6 +99,33 @@ void renderWorld(struct state *state) {
 				if (sin < 0) temp_y_b -= TILE_HEIGHT;
 				else temp_y_b += TILE_HEIGHT;
 			}
+		}
+		if (true) { //check to see if we went out of bounds eventually
+			//so we have the points we need now
+			float player_angle_vector_x = (float) FAST_COS(state->player->angle) * PLAYER_VECTOR_LENGTH;
+			float player_angle_vector_y = (float) FAST_SIN(state->player->angle) * PLAYER_VECTOR_LENGTH;
+			//differences
+			float difference_x_a = (float) temp_x_a - state->player->x;
+			float difference_y_a = (float) temp_y_a - state->player->y;
+			float difference_x_b = (float) temp_x_b - state->player->x;
+			float difference_y_b = (float) temp_y_b - state->player->y;
+			//numerators and denominators
+			float num_temp_a = DOT_PRODUCT(difference_x_a, difference_y_a, player_angle_vector_x, player_angle_vector_y);
+			float num_temp_b = DOT_PRODUCT(difference_x_b, difference_y_b, player_angle_vector_x, player_angle_vector_y);
+			float denom_temp = DOT_PRODUCT(player_angle_vector_x, player_angle_vector_y, player_angle_vector_x, player_angle_vector_y);
+			//the projection
+			float projected_vector_a_x = num_temp_a * player_angle_vector_x / denom_temp;
+			float projected_vector_a_y = num_temp_a * player_angle_vector_y / denom_temp;
+			float projected_vector_b_x = num_temp_b * player_angle_vector_x / denom_temp;
+			float projected_vector_b_y = num_temp_b * player_angle_vector_y / denom_temp;
+			//calculate distances
+			int dist_a = (int) sqrtf((float) (projected_vector_a_x * projected_vector_a_x + projected_vector_a_y * projected_vector_a_y));
+			int dist_b = (int) sqrtf((float) (projected_vector_b_x * projected_vector_b_x + projected_vector_b_y * projected_vector_b_y));
+			int dist = (dist_a < dist_b) ? dist_a : dist_b;
+			int height = 240 - (dist / 64);
+			if (height < 0) height = 0;
+			dbg_sprintf(dbgout, "Height was %d %d %d\n", height, num_temp_a, num_temp_b);
+			gfx_VertLine(i, 120 - (height / 2), height);
 		}
 	}
 }
