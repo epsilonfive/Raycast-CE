@@ -9,7 +9,7 @@
 struct player {
     int x;
     int y;
-    uint32_t angle;
+    int angle;
 };
 
 void updatePlayer(struct state *state);
