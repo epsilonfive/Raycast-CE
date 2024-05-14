@@ -20,7 +20,6 @@ void updatePlayer(struct state *state) {
         rotated = true;
     }
     player->angle %= ANGLE_RESOLUTION;
-    if (player->angle < 0) player->angle += ANGLE_RESOLUTION;
     if (getKeyState(state->input, KEY_UP)) {
         target_x += FAST_COS(player->angle) / PLAYER_MOVE_SPEED;
         target_y += FAST_SIN(player->angle) / PLAYER_MOVE_SPEED;
