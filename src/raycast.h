@@ -5,7 +5,7 @@
 
 void renderWorld(struct state *state);
 
-#define FOV 1024
+#define FOV 256
 #define MAX_ADJUST_TILES 2
 #define PRECISION 1000
 

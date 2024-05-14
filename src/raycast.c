@@ -35,25 +35,25 @@ void renderWorld(struct state *state) {
 		current_x_a += rdx;
 		if (cos) {
 			int dy_temp = DY(current_angle, rdx);
-			// if (dy < TILE_HEIGHT * MAX_ADJUST_TILES)
-			current_y_a += dy_temp;
+			if (dy_temp < TILE_HEIGHT * MAX_ADJUST_TILES) current_y_a += dy_temp;
+			else current_y_a += dy_temp;
 		}
 		//dbg_sprintf(dbgout, "Added %d\n", DY(current_angle, rdx));
 		int rdy = RDY(current_angle, state->player->y % TILE_HEIGHT);
 		current_y_b += rdy;
 		if (sin) {
 			int dx_temp = DX(current_angle, rdy);
-			// if (dx < TILE_WIDTH * MAX_ADJUST_TILES)
-			current_x_b += dx_temp;
+			if (dx_temp < TILE_WIDTH * MAX_ADJUST_TILES) current_x_b += dx_temp;
+			else current_x_b += TILE_WIDTH * MAX_ADJUST_TILES;
 		}
 		//slightly faster than using the generic ones probably
-		int dx = DX(current_angle, ((cos < 0) ? -TILE_WIDTH : TILE_WIDTH));
-		int dy = DY(current_angle, ((sin < 0) ? -TILE_HEIGHT : TILE_HEIGHT));
+		int dx = DX(current_angle, ((sin < 0) ? -TILE_WIDTH : TILE_WIDTH));
+		int dy = DY(current_angle, ((cos < 0) ? -TILE_HEIGHT : TILE_HEIGHT));
 		int temp_x_a = current_x_a, temp_y_a = current_y_a;
 		int temp_x_b = current_x_b, temp_y_b = current_y_b;
 		bool horizontal_found = false;
 		bool vertical_found = false;
-		dbg_sprintf(dbgout, "dx: %d dy: %d What %d %d\n", dx, dy, current_angle, cos * TILE_WIDTH / sin);
+		//dbg_sprintf(dbgout, "dx: %d dy: %d What %d %d\n", dx, dy, current_angle, cos * TILE_WIDTH / sin);
 		//do the check
 		while (!horizontal_found || !vertical_found) {
 			//check if we're out of bounds
@@ -66,17 +66,18 @@ void renderWorld(struct state *state) {
 				horizontal_found = true;
 			}
 			//dbg_sprintf(dbgout, "Checking point (%d, %d) for angle...%d\n", temp_x_a, temp_y_a, current_angle);
-			if (!vertical_found && state->map->data[temp_y_a / TILE_HEIGHT][temp_x_a / TILE_WIDTH]) {
+			if (!vertical_found && state->map->data[temp_y_a / TILE_HEIGHT][(temp_x_a - (cos < 0)) / TILE_WIDTH]) {
 				//we hit a wall vertically
 				gfx_SetColor(18);
 				//dbg_sprintf(dbgout, "Found wall at (%d, %d) (vertical check)\n", temp_x_a, temp_y_a);
 				//vertical_found = true;
 				gfx_SetPixel(temp_x_a / 128, temp_y_a / 128);
-			} else gfx_SetColor(222);
-			if (!horizontal_found && state->map->data[temp_y_b / TILE_HEIGHT][temp_x_b / TILE_WIDTH]) {
+				vertical_found = true;
+			}
+			if (!horizontal_found && state->map->data[(temp_y_b - (sin < 0)) / TILE_HEIGHT][temp_x_b / TILE_WIDTH]) {
 				//hit a wall horizontally
-				//gfx_SetColor(224);
-				//gfx_SetPixel(temp_x_b / 16, temp_y_b / 16);
+				gfx_SetColor(224);
+				gfx_SetPixel(temp_x_b / 128, temp_y_b / 128);
 				//dbg_sprintf(dbgout, "Found wall at (%d, %d) (horizontal check)\n", temp_x_b, temp_y_b);
 				horizontal_found = true;
 			}
