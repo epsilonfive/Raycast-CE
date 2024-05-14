@@ -10,8 +10,8 @@
 
 #define DX(angle, dy) (FAST_COS(angle) * dy / FAST_SIN(angle))
 #define DY(angle, dx) (FAST_SIN(angle) * dx / FAST_COS(angle))
-#define RDX(angle, offset) (((angle > (ANGLE_RESOLUTION / 4)) && (angle < 3 * (ANGLE_RESOLUTION / 4)) ? offset : TILE_WIDTH - offset))
-#define RDY(angle, offset) (((angle > (ANGLE_RESOLUTION / 2)) ? offset : TILE_WIDTH - offset))
+#define RDX(angle, offset) (((angle > (ANGLE_RESOLUTION / 4)) && (angle < 3 * (ANGLE_RESOLUTION / 4)) ? -offset : (TILE_WIDTH - offset)))
+#define RDY(angle, offset) (((angle < (ANGLE_RESOLUTION / 2)) ? (TILE_WIDTH - offset) : -offset))
 
 void renderWorld(struct state *state) {
 	int angle_start = state->player->angle - (FOV >> 1);
@@ -31,50 +31,59 @@ void renderWorld(struct state *state) {
 		int sin = FAST_SIN(current_angle);
 		int cos = FAST_COS(current_angle);
 		//fix the current x and y (set to edge of cell and stuff)
-		if (sin) {
-			int rdx = RDX(current_angle, state->player->x % TILE_WIDTH);
-			current_x_a += rdx;
-			current_y_a += DY(current_angle, rdx);
-			if (current_y_a / 16 < LCD_HEIGHT)
-				gfx_SetPixel(current_x_a / 16, current_y_a / 16);
-		}
-		if (cos) {
-			int rdy = RDY(current_angle, state->player->y % TILE_HEIGHT);
-			current_x_b += DX(current_angle, rdy);
-			current_y_b += rdy;
-		}
+		int rdx = RDX(current_angle, state->player->x % TILE_WIDTH);
+		current_x_a += rdx;
+		if (cos) current_y_a += DY(current_angle, rdx);
+		int rdy = RDY(current_angle, state->player->y % TILE_HEIGHT);
+		current_x_b += DX(current_angle, rdy);
+		if (sin) current_y_b += rdy;
 		//slightly faster than using the generic ones probably
-		int dx = DX(current_angle, TILE_WIDTH);
-		int dy = DY(current_angle, TILE_HEIGHT);
+		int dx = DX(current_angle, (cos < 0) ? -TILE_WIDTH : TILE_WIDTH);
+		int dy = DY(current_angle, (sin < 0) ? -TILE_HEIGHT : TILE_HEIGHT);
 		int temp_x_a = current_x_a, temp_y_a = current_y_a;
 		int temp_x_b = current_x_b, temp_y_b = current_y_b;
-		dbg_sprintf(dbgout, "dx: %d dy: %d\n", dx, dy);
+		bool horizontal_found = false;
+		bool vertical_found = false;
+		//dbg_sprintf(dbgout, "dx: %d dy: %d\n", dx, dy);
 		//do the check
-		while (true) {
-			//dbg_sprintf(dbgout, "Checking point (%d, %d) for angle...%d\n", temp_x_a, temp_y_a, current_angle);
-			if (state->map->data[temp_y_a / TILE_HEIGHT][temp_x_a / TILE_WIDTH]) {
-				//we hit a wall vertically
-				//gfx_SetPixel(temp_x_a / 16, temp_y_a / 16);
-				//dbg_sprintf(dbgout, "Found wall at (%d, %d) (vertical check)\n", temp_x_a, temp_y_a);
-				break;
-			}
-			if (state->map->data[temp_y_b / TILE_HEIGHT][temp_x_b / TILE_WIDTH]) {
-				//hit a wall horizontally
-				//dbg_sprintf(dbgout, "Found wall at (%d, %d) (horizontal check)\n", temp_x_b, temp_y_b);
-				break;
-			}
-			//current_x_a and current_y_a will be used to check the horizontal lines, the others for the vertical
-			temp_x_a += TILE_WIDTH;
-			temp_y_a += dy;
-			temp_x_b += dx;
-			temp_y_b += TILE_HEIGHT;
+		while (!horizontal_found || !vertical_found) {
 			//check if we're out of bounds
 			if (temp_x_a < 0 || temp_x_a > TILE_WIDTH * MAP_WIDTH ||
-				temp_x_b < 0 || temp_x_b > TILE_WIDTH * MAP_WIDTH)
+				temp_y_a < 0 || temp_y_a > TILE_HEIGHT * MAP_HEIGHT) {
+				vertical_found = true;
 				break;
-			if (temp_y_a < 0 || temp_y_a > TILE_HEIGHT * MAP_HEIGHT ||
-				temp_y_b < 0 || temp_y_b > TILE_HEIGHT * MAP_HEIGHT)
+			}
+			if (temp_x_b < 0 || temp_x_b > TILE_WIDTH * MAP_WIDTH ||
+				temp_y_b < 0 || temp_y_b > TILE_HEIGHT * MAP_HEIGHT) {
+				horizontal_found = true;
 				break;
+			}
+			//dbg_sprintf(dbgout, "Checking point (%d, %d) for angle...%d\n", temp_x_a, temp_y_a, current_angle);
+			if (!vertical_found && state->map->data[temp_y_a / TILE_HEIGHT][temp_x_a / TILE_WIDTH]) {
+				//we hit a wall vertically
+				gfx_SetColor(18);
+				gfx_SetPixel(temp_x_a / 16, temp_y_a / 16);
+				//dbg_sprintf(dbgout, "Found wall at (%d, %d) (vertical check)\n", temp_x_a, temp_y_a);
+				vertical_found = true;
+			}
+			if (!horizontal_found && state->map->data[(temp_y_b + 1) / TILE_HEIGHT][temp_x_b / TILE_WIDTH]) {
+				//hit a wall horizontally
+				gfx_SetColor(224);
+				gfx_SetPixel(temp_x_b / 16, temp_y_b / 16);
+				//dbg_sprintf(dbgout, "Found wall at (%d, %d) (horizontal check)\n", temp_x_b, temp_y_b);
+				horizontal_found = true;
+			}
+			//current_x_a and current_y_a will be used to check the horizontal lines, the others for the vertical
+			if (!vertical_found) {
+				if (cos < 0) temp_x_a -= TILE_WIDTH;
+				else temp_x_a += TILE_WIDTH;
+				temp_y_a += dy;
+			}
+			if (!horizontal_found) {
+				temp_x_b += dx;
+				if (sin < 0) temp_y_b -= TILE_HEIGHT;
+				else temp_y_b += TILE_HEIGHT;
+			}
 		}
 	}
 }

@@ -23,7 +23,7 @@ void initializeMap(struct map *map) {
 void renderMap(struct map *map) {
     for (int i = 0; i < MAP_HEIGHT; i++) {
         for (int j = 0; j < MAP_WIDTH; j++) {
-            if (map->data[j][i]) gfx_SetColor(0);
+            if (map->data[j][i]) gfx_SetColor(222);
             else gfx_SetColor(255);
             gfx_FillRectangle(MINIMAP_X + i * MINIMAP_TILE_WIDTH_PX,
                 MINIMAP_X + j * MINIMAP_TILE_HEIGHT_PX, MINIMAP_TILE_WIDTH_PX, MINIMAP_TILE_HEIGHT_PX); 
